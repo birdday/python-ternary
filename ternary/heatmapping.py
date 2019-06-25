@@ -85,13 +85,13 @@ def generate_hexagon_deltas():
     hexagon points for the hexagonal heatmap.
     """
 
-    zero = numpy.array([0, 0, 0])
-    alpha = numpy.array([-1./3, 2./3, 0])
-    deltaup = numpy.array([1./3, 1./3, 0])
-    deltadown = numpy.array([2./3, -1./3, 0])
-    i_vec = numpy.array([0, 1./2, -1./2])
-    i_vec_down = numpy.array([1./2, -1./2, 0])
-    deltaX_vec = numpy.array([1./2, 0, -1./2])
+    zero = numpy.array([0, 0, 0])*0.5
+    alpha = numpy.array([-1./3, 2./3, 0])*0.5
+    deltaup = numpy.array([1./3, 1./3, 0])*0.5
+    deltadown = numpy.array([2./3, -1./3, 0])*0.5
+    i_vec = numpy.array([0, 1./2, -1./2])*0.5
+    i_vec_down = numpy.array([1./2, -1./2, 0])*0.5
+    deltaX_vec = numpy.array([1./2, 0, -1./2])*0.5
 
     d = dict()
     # Corner Points
@@ -315,7 +315,7 @@ def heatmapf(func, scale=10, boundary=True, cmap=None, ax=None,
     # Pass everything to the heatmapper
     ax = heatmap(data, scale, cmap=cmap, ax=ax, style=style,
                  scientific=scientific, colorbar=colorbar,
-                 permutation=permutation, vmin=vmin, vmax=vmax, 
+                 permutation=permutation, vmin=vmin, vmax=vmax,
                  cbarlabel=cbarlabel, cb_kwargs=cb_kwargs)
     return ax
 
