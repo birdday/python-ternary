@@ -424,7 +424,7 @@ class TernaryAxesSubplot(object):
                                          permutation=permutation, **kwargs)
 
     def heatmap(self, data, scale=None, cmap=None, scientific=False,
-                style='triangular', colorbar=True, use_rgba=False,
+                style='triangular', polygon_sf=1, colorbar=True, use_rgba=False,
                 vmin=None, vmax=None, cbarlabel=None, cb_kwargs=None):
         permutation = self._permutation
         if not scale:
@@ -432,7 +432,7 @@ class TernaryAxesSubplot(object):
         if style.lower()[0] == 'd':
             self._boundary_scale = scale + 1
         ax = self.get_axes()
-        heatmapping.heatmap(data, scale, cmap=cmap, style=style, ax=ax,
+        heatmapping.heatmap(data, scale, cmap=cmap, style=style, polygon_sf=polygon_sf, ax=ax,
                             scientific=scientific, colorbar=colorbar,
                             permutation=permutation, use_rgba=use_rgba,
                             vmin=vmin, vmax=vmax, cbarlabel=cbarlabel,

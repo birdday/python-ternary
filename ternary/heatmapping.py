@@ -79,19 +79,19 @@ def alt_triangle_coordinates(i, j, k):
 
 ## Hexagonal Heatmaps ##
 
-def generate_hexagon_deltas():
+def generate_hexagon_deltas(polygon_sf=1):
     """
     Generates a dictionary of the necessary additive vectors to generate the
     hexagon points for the hexagonal heatmap.
     """
 
-    zero = numpy.array([0, 0, 0])
-    alpha = numpy.array([-1./3, 2./3, 0])
-    deltaup = numpy.array([1./3, 1./3, 0])
-    deltadown = numpy.array([2./3, -1./3, 0])
-    i_vec = numpy.array([0, 1./2, -1./2])
-    i_vec_down = numpy.array([1./2, -1./2, 0])
-    deltaX_vec = numpy.array([1./2, 0, -1./2])
+    zero = numpy.array([0, 0, 0])*polygon_sf
+    alpha = numpy.array([-1./3, 2./3, 0])*polygon_sf
+    deltaup = numpy.array([1./3, 1./3, 0])*polygon_sf
+    deltadown = numpy.array([2./3, -1./3, 0])*polygon_sf
+    i_vec = numpy.array([0, 1./2, -1./2])*polygon_sf
+    i_vec_down = numpy.array([1./2, -1./2, 0])*polygon_sf
+    deltaX_vec = numpy.array([1./2, 0, -1./2])*polygon_sf
 
     d = dict()
     # Corner Points
@@ -108,10 +108,7 @@ def generate_hexagon_deltas():
     return d
 
 
-hexagon_deltas = generate_hexagon_deltas()
-
-
-def hexagon_coordinates(i, j, k):
+def hexagon_coordinates(i, j, k, polygon_sf=1):
     """
     Computes coordinates of the constituent hexagons of a hexagonal heatmap.
 
@@ -123,7 +120,7 @@ def hexagon_coordinates(i, j, k):
     -------
     A numpy array of coordinates of the hexagon (unprojected)
     """
-
+    hexagon_deltas = generate_hexagon_deltas(polygon_sf=polygon_sf)
     signature = ""
     for x in [i, j, k]:
         if x == 0:
@@ -137,7 +134,7 @@ def hexagon_coordinates(i, j, k):
 
 ## Heatmaps ##
 
-def polygon_generator(data, scale, style, permutation=None):
+def polygon_generator(data, scale, style, permutation=None, polygon_sf=1):
     """Generator for the vertices of the polygon to be colored and its color,
     depending on style. Called by heatmap."""
 
@@ -158,7 +155,7 @@ def polygon_generator(data, scale, style, permutation=None):
         j = key[1]
         k = scale - i - j
         if style == 'h':
-            vertices = hexagon_coordinates(i, j, k)
+            vertices = hexagon_coordinates(i, j, k, polygon_sf=polygon_sf)
             yield (map(project, vertices), value)
         elif style == 'd':
             # Upright triangles
@@ -184,7 +181,7 @@ def polygon_generator(data, scale, style, permutation=None):
 
 
 def heatmap(data, scale, vmin=None, vmax=None, cmap=None, ax=None,
-            scientific=False, style='triangular', colorbar=True,
+            scientific=False, style='triangular', polygon_sf=1, colorbar=True,
             permutation=None, use_rgba=False, cbarlabel=None, cb_kwargs=None):
     """
     Plots heatmap of given color values.
@@ -242,7 +239,8 @@ def heatmap(data, scale, vmin=None, vmax=None, cmap=None, ax=None,
         raise ValueError("Heatmap style must be 'triangular', 'dual-triangular', or 'hexagonal'")
 
     vertices_values = polygon_generator(data, scale, style,
-                                        permutation=permutation)
+                                        permutation=permutation,
+                                        polygon_sf=polygon_sf)
 
     # Draw the polygons and color them
     for vertices, value in vertices_values:
@@ -315,7 +313,7 @@ def heatmapf(func, scale=10, boundary=True, cmap=None, ax=None,
     # Pass everything to the heatmapper
     ax = heatmap(data, scale, cmap=cmap, ax=ax, style=style,
                  scientific=scientific, colorbar=colorbar,
-                 permutation=permutation, vmin=vmin, vmax=vmax, 
+                 permutation=permutation, vmin=vmin, vmax=vmax,
                  cbarlabel=cbarlabel, cb_kwargs=cb_kwargs)
     return ax
 
